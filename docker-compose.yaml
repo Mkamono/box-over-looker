@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  scraping:
+    image: python:3.11-slim-bullseye
+    tty: true
+  backend:
+    image: python:3.11-slim-bullseye
+    tty: true
+  db:
+    image: postgres:16
+    tty: true
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=kakeru
+      - POSTGRES_PASSWORD=bol
+volumes:
+  postgres_volume:
