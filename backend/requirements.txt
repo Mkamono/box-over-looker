@@ -1,0 +1,5 @@
+fastapi[all]
+sqlalchemy
+requests
+schedule
+psycopg2-binary
