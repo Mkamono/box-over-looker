@@ -1,17 +1,15 @@
-from re import S
 from uuid import uuid4
 
-from requests import Session
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
+import sqlalchemy
 from models import ItemRecord, ScrapingResults
+from sqlalchemy.orm import Session
 
 
-def create_session(db_name: str):
-    engine = create_engine(f"postgresql://kakeru:bol@localhost/{db_name}")
-    Session = sessionmaker(bind=engine)
-    return Session()
+def create_session(db_name: str) -> Session:
+    engine = sqlalchemy.create_engine(
+        f"sqlite:///{db_name}.db",
+    )
+    return Session(engine)
 
 
 def migrate_db(db_name: str):
