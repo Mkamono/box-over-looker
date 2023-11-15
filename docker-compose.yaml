@@ -2,10 +2,10 @@ version: '3'
 
 services:
   scraping:
-    image: python:3.11-slim-bullseye
+    build: ./scraping
     tty: true
   backend:
-    image: python:3.11-slim-bullseye
+    build: ./backend
     tty: true
   db:
     image: postgres:16
