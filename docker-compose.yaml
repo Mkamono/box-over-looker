@@ -2,10 +2,14 @@ version: '3'
 
 services:
   scraping:
-    image: python:3.11-slim-bullseye
+    build:
+      context: ./scraping
+      dockerfile: ./Dockerfile
     tty: true
   backend:
-    image: python:3.11-slim-bullseye
+    build:
+      context: ./backend
+      dockerfile: ./Dockerfile
     tty: true
   db:
     image: postgres:16
