@@ -6,9 +6,7 @@ from sqlalchemy.orm import Session
 
 
 def create_session(db_name: str) -> Session:
-    engine = sqlalchemy.create_engine(
-        f"sqlite:///{db_name}.db",
-    )
+    engine = sqlalchemy.create_engine(f"postgresql://kakeru:bol@db/{db_name}")
     return Session(engine)
 
 
