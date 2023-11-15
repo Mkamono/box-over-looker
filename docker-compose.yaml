@@ -4,12 +4,12 @@ services:
   scraping:
     build:
       context: ./scraping
-      dockerfile: Dockerfile
+      dockerfile: ./Dockerfile
     tty: true
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: ./Dockerfile
     tty: true
   db:
     image: postgres:16
