@@ -1,3 +1,4 @@
+import os
 from uuid import uuid4
 
 import sqlalchemy
@@ -5,9 +6,16 @@ from models import ItemRecord, ScrapingResults
 from sqlalchemy.orm import Session
 
 
-def create_session(db_name: str) -> Session:
-    engine = sqlalchemy.create_engine(f"postgresql://kakeru:bol@db/{db_name}")
-    return Session(engine)
+def create_session(db_name: str, driver: str = "postgres") -> Session:
+    if driver == "sqlite":
+        engine = sqlalchemy.create_engine(f"sqlite:///{db_name}.db")
+        return Session(engine)
+    if driver == "postgres":
+        engine = sqlalchemy.create_engine(
+            f"postgresql://{os.environ['DB_USER']}:{os.environ['DB_PASSWORD']}@{os.environ['DB_HOST']}:{os.environ['DB_PORT']}/{db_name}"
+        )
+        return Session(engine)
+    raise ValueError("Invalid driver")
 
 
 def migrate_db(db_name: str):
