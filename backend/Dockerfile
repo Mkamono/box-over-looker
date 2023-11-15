@@ -9,3 +9,5 @@ ENV SCRAPING_HOST=http://host.docker.internal:8000
 
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install -r /tmp/requirements.txt
+
+COPY ./src ./src
