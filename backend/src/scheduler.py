@@ -3,10 +3,8 @@ from time import sleep
 
 import requests
 import schedule
-
 from db import create_item_records
 from models import ScrapingResults
-import os
 
 
 def create_scraping_results() -> None:

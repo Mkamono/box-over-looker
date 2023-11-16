@@ -8,7 +8,7 @@ class URL:
         self,
         product: Product,
         price_min: int = 1000,
-        price_max: int = 100000,
+        price_max: int = 1000000,
         exclude_keywords: list[str] = [],
     ) -> None:
         """URLを生成するクラスです

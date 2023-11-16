@@ -1,9 +1,9 @@
+import os
 from multiprocessing import Process
 
+from migrate import migrate_db
 from scheduler import exec_regularly
 from server import run_server
-from migrate import migrate_db
-import os
 
 
 def run_parallel_process() -> None:

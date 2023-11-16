@@ -2,9 +2,8 @@ import os
 
 import requests
 import uvicorn
-from fastapi import FastAPI
-
 from db import create_item_records
+from fastapi import FastAPI
 from models import ScrapingResults
 
 app = FastAPI()
