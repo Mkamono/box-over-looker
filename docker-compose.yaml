@@ -1,32 +1,33 @@
 version: '3'
 
 services:
+
   scraping:
     build:
       context: ./scraping
       dockerfile: ./Dockerfile
     tty: true
+    ports:
+      - ${SCRAPING_PORT}:8000
+    env_file:
+      - .env
   backend:
     build:
       context: ./backend
       dockerfile: ./Dockerfile
-    environment:
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_USER=kakeru
-      - DB_PASSWORD=bol
-      - DB_NAME=items
     tty: true
+    ports:
+      - ${BACKEND_PORT}:8001
+    env_file:
+      - .env
   db:
     image: postgres:16
     tty: true
     ports:
-      - 5432:5432
+      - ${POSTGRES_PORT}:5432
     volumes:
       - postgres_volume:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=kakeru
-      - POSTGRES_PASSWORD=bol
-      - POSTGRES_DB=items
+    env_file:
+      - .env
 volumes:
   postgres_volume:

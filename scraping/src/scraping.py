@@ -1,14 +1,13 @@
 from typing import Callable
 
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options as ChromeOptions
-from selenium.webdriver.chrome.service import Service as ChromeService
-
 from domain.mercari import get_items as get_items_mercari
 from domain.paypay import get_items as get_items_paypay
 from domain.rakuma import get_items as get_items_rakuma
 from errors import ItemNotFoundError
 from models import Item, Product
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.chrome.service import Service as ChromeService
 from url import URL
 
 

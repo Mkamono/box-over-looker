@@ -1,5 +1,7 @@
+import os
 from multiprocessing import Process
 
+from migrate import migrate_db
 from scheduler import exec_regularly
 from server import run_server
 
@@ -16,4 +18,5 @@ def run_parallel_process() -> None:
 
 
 if __name__ == "__main__":
+    migrate_db(db_name=os.environ["POSTGRES_DB"])
     run_parallel_process()

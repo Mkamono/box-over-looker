@@ -12,7 +12,7 @@ def create_session(db_name: str, driver: str = "postgres") -> Session:
         return Session(engine)
     if driver == "postgres":
         engine = sqlalchemy.create_engine(
-            f"postgresql://{os.environ['DB_USER']}:{os.environ['DB_PASSWORD']}@{os.environ['DB_HOST']}:{os.environ['DB_PORT']}/{db_name}"
+            f"postgresql://{os.environ['POSTGRES_USER']}:{os.environ['POSTGRES_PASSWORD']}@{os.environ['POSTGRES_HOST']}:{os.environ['POSTGRES_PORT']}/{db_name}"
         )
         return Session(engine)
     raise ValueError("Invalid driver")
