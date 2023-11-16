@@ -1,7 +1,8 @@
 import datetime
+import os
 
+import uvicorn
 from fastapi import FastAPI
-
 from models import Item, Product, ScrapingResult, ScrapingResults, Site
 from scraping import scraping_all_site
 
@@ -44,3 +45,11 @@ def get_ScrapingResults_mock() -> ScrapingResults:
             ),
         ]
     )
+
+
+def run_server() -> None:
+    uvicorn.run(app, port=int(os.environ["SCRAPING_PORT"]))
+
+
+if __name__ == "__main__":
+    run_server()
