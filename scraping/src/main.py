@@ -48,7 +48,7 @@ def get_ScrapingResults_mock() -> ScrapingResults:
 
 
 def run_server() -> None:
-    uvicorn.run(app, port=int(os.environ["SCRAPING_PORT"]))
+    uvicorn.run(app, port=int(os.environ["SCRAPING_PORT"]), host="0.0.0.0")
 
 
 if __name__ == "__main__":

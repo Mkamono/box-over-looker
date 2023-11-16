@@ -17,16 +17,16 @@ async def root():
 
 @app.get("/dev/create/results")
 async def create_results():
-    scraping_host = os.environ["SCRAPING_HOST"]
-    response = requests.get(f"{scraping_host}/scraping").json()
-
+    response = requests.get(
+        f"http://{os.environ['SCRAPING_HOST']}:{os.environ['SCRAPING_PORT']}/scraping"
+    ).json()
     scraping_results = ScrapingResults(**response)
-    create_item_records(db_name="items", results=scraping_results)
+    create_item_records(db_name=os.environ["POSTGRES_DB"], results=scraping_results)
     return scraping_results
 
 
 def run_server() -> None:
-    uvicorn.run(app, port=int(os.environ["BACKEND_PORT"]))
+    uvicorn.run(app, port=int(os.environ["BACKEND_PORT"]), host="0.0.0.0")
 
 
 if __name__ == "__main__":

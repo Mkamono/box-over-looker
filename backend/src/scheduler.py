@@ -6,14 +6,15 @@ import schedule
 
 from db import create_item_records
 from models import ScrapingResults
+import os
 
 
 def create_scraping_results() -> None:
-    scraping_host = os.environ["SCRAPING_HOST"]
-    response = requests.get(f"{scraping_host}/scraping")
-
+    response = requests.get(
+        f"http://{os.environ['SCRAPING_HOST']}:{os.environ['SCRAPING_PORT']}/scraping"
+    )
     scraping_results = ScrapingResults(**response.json())
-    create_item_records(db_name="items", results=scraping_results)
+    create_item_records(db_name=os.environ["POSTGRES_DB"], results=scraping_results)
     return
 
 
