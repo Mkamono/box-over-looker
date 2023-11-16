@@ -12,6 +12,9 @@ class Site(IntEnum):
     楽天ラクマ = 3
     ヤフオク = 4
     スニーカーダンク = 5
+    amazon = 6
+    楽天市場 = 7
+    ヤフーショッピング = 8
 
 
 class Product(IntEnum):
