@@ -1,4 +1,4 @@
-FROM python:3.11-slim-bullseye
+FROM --platform=linux/arm64 python:3.11-slim-bullseye
 
 RUN apt update && \
     apt install -y locales && \
@@ -10,8 +10,8 @@ ENV TZ=JST-9
 ENV TERM=xterm
 
 RUN apt update
-RUN apt install -y chromium=119.0.6045.159-1~deb11u1 --fix-missing
-RUN apt install -y chromium-driver=119.0.6045.159-1~deb11u1 --fix-missing
+RUN apt install -y chromium=119.0.6045.123-1~deb11u1 --fix-missing
+RUN apt install -y chromium-driver=119.0.6045.123-1~deb11u1 --fix-missing
 
 COPY ./requirements.txt .
 
