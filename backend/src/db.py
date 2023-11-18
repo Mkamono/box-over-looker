@@ -34,3 +34,10 @@ def create_item_records(db_name: str, results: ScrapingResults):
 
     session.commit()
     session.close()
+
+
+def read_item_records(db_name: str) -> list[ItemRecord]:
+    session = create_session(db_name)
+    records = session.query(ItemRecord).all()
+    session.close()
+    return records
