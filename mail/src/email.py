@@ -1,12 +1,12 @@
 from smtplib import SMTP
+import os
 
-
-def create_connection(login_address: str, login_pass: str) -> SMTP:
+def create_connection() -> SMTP:
     smtp_host: str = "smtp.gmail.com"
     smtp_port: int = 587
 
     con = SMTP(smtp_host, smtp_port)
     con.set_debuglevel(True)
     con.starttls()
-    con.login(login_address, login_pass)
+    con.login(os.environ["GMAIL_ADDRESS"], os.environ["GMAIL_PASSWORD"])
     return con
