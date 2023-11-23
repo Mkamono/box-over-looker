@@ -16,7 +16,7 @@ def create_connection() -> SMTP:
     return con
 
 
-def createMailMessageMIME(title: str, body: str, user_address: str) -> MIMEMultipart:
+def create_message(title: str, body: str, user_address: str) -> MIMEMultipart:
     msg = MIMEMultipart()
     msg["Subject"] = title
     msg["From"] = os.environ["GMAIL_ADDRESS"]
@@ -26,8 +26,8 @@ def createMailMessageMIME(title: str, body: str, user_address: str) -> MIMEMulti
     return msg
 
 
-def send_email(title, body: str, user_address: str) -> None:
-    message = createMailMessageMIME(title, body, user_address)
+def send_email(title: str, body: str, user_address: str) -> None:
+    message = create_message(title, body, user_address)
     con = create_connection()
     con.send_message(message)
     con.close()
