@@ -9,4 +9,5 @@ def hello_world() -> str:
 
 @app.route("/test")
 def test_message() -> str:
+    print("test")
     return "<p>test</p>"
