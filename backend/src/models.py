@@ -1,9 +1,19 @@
 from datetime import datetime
 from enum import IntEnum
 
+import requests
 from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import DeclarativeBase
+
+
+class Mail(BaseModel):
+    title: str
+    user_address: str
+    body: str
+
+    def post_mail(self) -> None:
+        requests.post(f"flaskのデプロイ後のエンドポイント", json=self)
 
 
 class Site(IntEnum):
