@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from enum import IntEnum
 
@@ -13,7 +14,7 @@ class Mail(BaseModel):
     body: str
 
     def post_mail(self) -> None:
-        requests.post(f"flaskのデプロイ後のエンドポイント", json=self)
+        requests.post(os.environ["MAIL_HOST"], json=self)
 
 
 class Site(IntEnum):
