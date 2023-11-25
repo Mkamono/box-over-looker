@@ -17,9 +17,8 @@ def post() -> str:
     mail: dict = request.get_json()
     if mail is None:
         raise MissingSchema("Request body is missing")
-    for key in ["title", "body", "user_address"]:
-        if key not in mail:
-            raise InvalidURL(f"'{key}' is missing in the request body")
+    if not all(key in mail for key in ["title", "body", "user_address"]):
+        raise InvalidURL("Request body is invalid")
     try:
         send_email(mail["title"], mail["body"], mail["user_address"])
     except SMTPRecipientsRefused as e:
