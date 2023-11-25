@@ -14,7 +14,7 @@ class Mail(BaseModel):
     body: str
 
     def post_mail(self) -> None:
-        requests.post(os.environ["MAIL_HOST"], json=self)
+        requests.post(f"{os.environ['MAIL_HOST']}/send_mail", json=self)
 
 
 class Site(IntEnum):
