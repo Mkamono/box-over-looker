@@ -14,7 +14,10 @@ class Mail(BaseModel):
     body: str
 
     def post_mail(self) -> None:
-        requests.post(f"{os.environ['MAIL_HOST']}/send_mail", json=self)
+        mail_host = os.environ["MAIL_HOST"]
+        if mail_host is None:
+            raise ValueError("MAIL_HOST environment variable is not set.")
+        requests.post(f"{mail_host}/send_mail", json=self)
 
 
 class Site(IntEnum):
