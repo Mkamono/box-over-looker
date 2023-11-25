@@ -15,10 +15,10 @@ def hello_world() -> str:
 def post() -> str:
     mail: dict = request.get_json()
     if mail is None:
-        raise ValueError("Request body is empty")
+        return "Request body is empty"
     for key in ["title", "body", "user_address"]:
         if key not in mail:
-            raise ValueError(f"Request body does not contain {key}")
+            return f"Request body does not contain {key}"
     try:
         send_email(mail["title"], mail["body"], mail["user_address"])
     except SMTPRecipientsRefused as e:
