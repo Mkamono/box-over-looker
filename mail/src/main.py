@@ -14,10 +14,5 @@ def hello_world() -> str:
 @app.route("/send_mail", methods=["POST"])
 def post() -> str:
     mail: dict = request.get_json()
-    try:
-        send_email(mail["title"], mail["body"], mail["user_address"])
-    except SMTPRecipientsRefused as e:
-        raise e
-    except Exception as e:
-        raise e
+    send_email(mail["title"], mail["body"], mail["user_address"])
     return "OK"
