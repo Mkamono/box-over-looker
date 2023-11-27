@@ -26,8 +26,6 @@ def retry_get_request(func):
                 print("GETリクエストに失敗しました。リトライします。")
                 continue
             except Exception as e:
-                print("GETリクエストに予期せぬエラーが発生しました。")
-                print(e)
                 raise e
         raise ItemNotFoundError
 
