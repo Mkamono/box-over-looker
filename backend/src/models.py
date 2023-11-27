@@ -20,6 +20,7 @@ class Mail(BaseModel):
         try:
             requests.post(f"{mail_host}/send_mail", json=self.model_dump_json())
         except Exception as e:
+            print("Failed to send Email because of following error.")
             print(e)
 
 
