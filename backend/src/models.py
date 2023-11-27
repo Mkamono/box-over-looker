@@ -1,9 +1,27 @@
+import os
 from datetime import datetime
 from enum import IntEnum
 
+import requests
 from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import DeclarativeBase
+
+
+class Mail(BaseModel):
+    title: str
+    user_address: str
+    body: str
+
+    def post_mail(self) -> None:
+        mail_host = os.environ.get("MAIL_HOST")
+        if mail_host is None:
+            raise ValueError("MAIL_HOST environment variable is not set.")
+        try:
+            requests.post(f"{mail_host}/send_mail", json=self.model_dump_json())
+        except Exception as e:
+            print("Failed to send Email because of following error.")
+            print(e)
 
 
 class Site(IntEnum):
