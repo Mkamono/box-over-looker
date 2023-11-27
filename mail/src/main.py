@@ -1,4 +1,4 @@
-from smtplib import SMTPRecipientsRefused
+import json
 
 from flask import Flask, request
 from send_mail import send_email
@@ -15,4 +15,4 @@ def hello_world() -> str:
 def post() -> str:
     mail: dict = request.get_json()
     send_email(mail["title"], mail["body"], mail["user_address"])
-    return "OK"
+    return json.dumps(mail)
