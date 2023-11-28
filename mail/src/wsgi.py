@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 project_folder: str = "/home/kakerururu/box-over-looker"
 load_dotenv(os.path.join(project_folder, ".env"))
 
-path: str = "/home/kakerururu/box-over-looker/mail/src"
+path: str = f"{project_folder}/mail/src"
 if path not in sys.path:
     sys.path.append(path)
 
