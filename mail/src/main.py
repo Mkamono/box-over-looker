@@ -16,3 +16,7 @@ def post() -> str:
     mail: dict = request.get_json()
     send_email(mail["title"], mail["body"], mail["user_address"])
     return json.dumps(mail)
+
+
+if __name__ == "__main__":
+    app.run()
