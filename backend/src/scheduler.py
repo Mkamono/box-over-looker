@@ -17,7 +17,7 @@ def create_scraping_results() -> None:
 
 
 def exec_regularly() -> None:
-    schedule.every().hour.do(create_scraping_results)
+    schedule.every().hour.at(":00").do(create_scraping_results)
     while True:
         schedule.run_pending()
         sleep(1 * 60)
