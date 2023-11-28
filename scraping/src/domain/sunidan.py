@@ -1,16 +1,15 @@
+from domain.tools import retry_get_element, retry_get_request
+from models import Item, Product, Site
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
-
-from domain.tools import retry
-from models import Item, Product, Site
 
 
 def login(driver: webdriver.Chrome) -> None:
     url_login = "https://snkrdunk.com/accounts/login/"
     driver.get(url_login)
 
-    @retry
+    @retry_get_element
     def get_login_elem() -> tuple[WebElement, WebElement, WebElement]:
         username_input = driver.find_element(
             By.XPATH, "/html/body/div[2]/section/form/ul/li[1]/input"
@@ -31,18 +30,19 @@ def login(driver: webdriver.Chrome) -> None:
     submit_button.submit()
 
 
+@retry_get_request
 def get_items(driver: webdriver.Chrome, url: str, product: Product) -> list[Item]:
     login(driver)
 
     driver.get(url)
 
-    @retry
+    @retry_get_element
     def get_item_grid_elem() -> WebElement:
         return driver.find_element(By.XPATH, "/html/body/div[3]/div/ul")
 
     item_grid_elem = get_item_grid_elem()
 
-    @retry
+    @retry_get_element
     def get_item_price_list() -> list[int]:
         item_prices = [
             int(e.text.replace(",", "").replace("\u00A5", ""))

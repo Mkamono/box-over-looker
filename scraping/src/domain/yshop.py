@@ -1,11 +1,10 @@
+from domain.tools import retry_get_element, retry_get_request
+from errors import ItemNotFoundError
+from models import Item, Site
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
-
-from domain.tools import retry
-from errors import ItemNotFoundError
-from models import Item, Site
 
 
 def check_item_not_found(driver: webdriver.Chrome) -> None:
@@ -42,10 +41,11 @@ def check_item_not_found(driver: webdriver.Chrome) -> None:
         raise ItemNotFoundError
 
 
+@retry_get_request
 def get_items(driver: webdriver.Chrome, url: str) -> list[Item]:
     driver.get(url)
 
-    @retry
+    @retry_get_element
     def get_item_grid_elem() -> WebElement:
         check_item_not_found(driver)
         item_grid_elem = driver.find_element(
@@ -55,7 +55,7 @@ def get_items(driver: webdriver.Chrome, url: str) -> list[Item]:
 
     item_grid_elem = get_item_grid_elem()
 
-    @retry
+    @retry_get_element
     def get_item_info_list() -> tuple[list[str], list[int]]:
         item_titles = [
             str(e.text).replace("　", " ")

@@ -43,6 +43,10 @@ def scraping_all_site(product: Product) -> list[Item]:
                 Item_list += get_item_from_page(driver, generate_url(page))
             except ItemNotFoundError:
                 break
+            except Exception as e:
+                print("予期せぬエラーが発生しました。")
+                print(e)
+                break
             page += 1
         return Item_list
 

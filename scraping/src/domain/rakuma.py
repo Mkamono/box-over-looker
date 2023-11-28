@@ -1,37 +1,42 @@
-import requests
+from domain.tools import retry_get_element, retry_get_request
+from errors import ItemNotFoundError
+from models import Item, Site
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
-from domain.tools import retry
-from errors import ItemNotFoundError
-from models import Item, Site
 
+def check_item_not_found(driver: webdriver.Chrome) -> None:
+    def get_elem_not_found() -> WebElement:
+        not_found_elem = driver.find_element(
+            By.XPATH, "/html/body/div[3]/div/div/div/div/div/div[2]/section/div[3]"
+        )
+        return not_found_elem
 
-def check_status_code(url: str):
-    res = requests.get(url)
-    if res.status_code == 200:
+    try:
+        get_elem_not_found()
+    except NoSuchElementException:
         return
-    if res.status_code == 404:
-        raise ItemNotFoundError
-    res.raise_for_status()
-    raise Exception("レスポンスエラー")
+    raise ItemNotFoundError
 
 
+@retry_get_request
 def get_items(driver: webdriver.Chrome, url: str) -> list[Item]:
     driver.get(url)
-    check_status_code(url)
 
-    @retry
+    @retry_get_element
     def get_item_grid_elem() -> WebElement:
-        return driver.find_element(
+        check_item_not_found(driver)
+        item_grid_elem = driver.find_element(
             By.XPATH,
             "/html/body/div[3]/div/div/div/div/div/div[2]/section/div[2]/section",
         )
+        return item_grid_elem
 
     item_grid_elem = get_item_grid_elem()
 
-    @retry
+    @retry_get_element
     def get_item_info_list() -> tuple[list[str], list[int]]:
         item_titles = [
             str(e.get_attribute("alt")).replace("　", " ")
