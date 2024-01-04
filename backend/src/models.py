@@ -142,7 +142,7 @@ class AnalysisRecord(Base):
     def to_analysis(self):
         return Analysis(
             ID=self.format_via_str(self.ID, str),
-            date=self.format_via_str(self.date, datetime),
+            date=datetime.strptime(str(self.date), "%Y-%m-%d %H:%M:%S.%f"),
             median=self.format_via_str(self.median, float),
             product=self.format_via_str(self.product, Product),
         )
