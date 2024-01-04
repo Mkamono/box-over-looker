@@ -142,7 +142,7 @@ class AnalysisRecord(Base):
     def format_via_str(self, value, target_type: type):
         return target_type(str(value))
 
-    def format_to_product(self, product_name: Column) -> Product:
+    def format_to_product(self, product_name: Column[str]) -> Product:
         for product in Product:
             if str(product_name) == product.name:
                 return product
