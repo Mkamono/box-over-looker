@@ -112,3 +112,47 @@ class ItemRecord(Base):
             ),
             product=self.format_to_product(self.product),
         )
+
+
+class Analysis(BaseModel):
+    ID: str = ""
+    product: Product
+    median: int
+    date: datetime
+
+    def to_record(self):
+        return AnalysisRecord(
+            ID=self.ID,
+            date=str(self.date),
+            median=self.median,
+            product=self.product.name,
+        )
+
+
+class AnalysisRecord(Base):
+    __tablename__ = "analysis"
+    ID = Column(String, primary_key=True)
+    date = Column(String, nullable=False)
+    median = Column(Integer, nullable=False)
+    product = Column(String, nullable=False)
+
+    def format_to_datetime(self, date: Column) -> datetime:
+        return datetime.strptime(str(date), "%Y-%m-%d %H:%M:%S.%f")
+
+    def format_via_str(self, value, target_type: type):
+        return target_type(str(value))
+
+    def format_to_product(self, product_name: Column) -> Product:
+        for product in Product:
+            if str(product_name) == product.name:
+                return product
+        else:
+            raise ValueError(f"product_name: {product_name} is not in Product.")
+
+    def to_analysis(self):
+        return Analysis(
+            ID=self.format_via_str(self.ID, str),
+            date=self.format_to_datetime(self.date),
+            median=self.format_via_str(self.median, int),
+            product=self.format_to_product(self.product),
+        )
