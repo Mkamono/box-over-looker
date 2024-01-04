@@ -4,7 +4,7 @@ from enum import IntEnum
 
 import requests
 from pydantic import BaseModel
-from sqlalchemy import Column, DateTime, Enum, Integer, String
+from sqlalchemy import Column, DateTime, Enum, Float, Integer, String
 from sqlalchemy.orm import DeclarativeBase
 
 
@@ -117,7 +117,7 @@ class ItemRecord(Base):
 class Analysis(BaseModel):
     ID: str = ""
     product: Product
-    median: int
+    median: float
     date: datetime
 
     def to_record(self):
@@ -133,7 +133,7 @@ class AnalysisRecord(Base):
     __tablename__ = "analysis"
     ID = Column(String, primary_key=True)
     date = Column(DateTime, nullable=False)
-    median = Column(Integer, nullable=False)
+    median = Column(Float, nullable=False)
     product = Column(Enum(Product), nullable=False)
 
     def format_via_str(self, value, target_type: type):
@@ -150,6 +150,6 @@ class AnalysisRecord(Base):
         return Analysis(
             ID=self.format_via_str(self.ID, str),
             date=self.format_via_str(self.date, datetime),
-            median=self.format_via_str(self.median, int),
+            median=self.format_via_str(self.median, float),
             product=self.format_to_product(self.product),
         )
