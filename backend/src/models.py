@@ -4,7 +4,7 @@ from enum import IntEnum
 
 import requests
 from pydantic import BaseModel
-from sqlalchemy import Column, DateTime, Enum, Float, Integer, String
+from sqlalchemy import Column, DateTime, Float, Integer, String
 from sqlalchemy.orm import DeclarativeBase
 
 
@@ -134,15 +134,22 @@ class AnalysisRecord(Base):
     ID = Column(String, primary_key=True)
     date = Column(DateTime, nullable=False)
     median = Column(Float, nullable=False)
-    product = Column(Enum(Product), nullable=False)
+    product = Column(String, nullable=False)
 
     def format_via_str(self, value, target_type: type):
         return target_type(str(value))
+
+    def format_to_product(self, product_name: Column) -> Product:
+        for product in Product:
+            if str(product_name) == product.name:
+                return product
+        else:
+            raise ValueError(f"product_name: {product_name} is not in Product.")
 
     def to_analysis(self):
         return Analysis(
             ID=self.format_via_str(self.ID, str),
             date=datetime.strptime(str(self.date), "%Y-%m-%d %H:%M:%S.%f"),
             median=self.format_via_str(self.median, float),
-            product=self.format_via_str(self.product, Product),
+            product=self.format_to_product(self.product),
         )
