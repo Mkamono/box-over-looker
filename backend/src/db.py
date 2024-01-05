@@ -18,7 +18,7 @@ def create_session(db_name: str, driver: str = "postgres") -> Session:
     raise ValueError("Invalid driver")
 
 
-def migrate_db(db_name: str):
+def migrate_db(db_name: str) -> None:
     session = create_session(db_name)
     ItemRecord.metadata.create_all(session.get_bind())
     AnalysisRecord.metadata.create_all(session.get_bind())
