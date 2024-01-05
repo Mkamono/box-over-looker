@@ -9,10 +9,6 @@ ENV LC_ALL=ja_JP.UTF-8
 ENV TZ=JST-9
 ENV TERM=xterm
 
-RUN apt update
-RUN apt install -y chromium=119.0.6045.123-1~deb11u1 --fix-missing
-RUN apt install -y chromium-driver=119.0.6045.123-1~deb11u1 --fix-missing
-
 COPY ./requirements.txt .
 
 RUN pip install --upgrade pip && \
