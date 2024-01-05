@@ -28,6 +28,12 @@ def calc_median(product: Product, results: ScrapingResults) -> float:
         if item.product == product:
             price_list.append(item.Item.price)
     price_list.sort()
-    median: float = price_list[len(price_list) // 2]
-
+    if len(price_list) == 0:
+        raise ValueError("Empty list")
+    elif len(price_list) % 2 == 0:
+        median: float = (
+            price_list[len(price_list) // 2] + price_list[len(price_list) // 2 - 1]
+        ) / 2
+    else:
+        median: float = price_list[len(price_list) // 2]
     return median
