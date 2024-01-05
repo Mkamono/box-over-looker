@@ -1,3 +1,4 @@
+import os
 from typing import Callable
 
 from domain.amazon import get_items as get_items_amazon
@@ -12,7 +13,6 @@ from errors import ItemNotFoundError
 from models import Item, Product
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
-from selenium.webdriver.chrome.service import Service as ChromeService
 from url import URL
 
 
@@ -24,8 +24,9 @@ def setting_driver():
     options.add_argument("--enable-automation")
     options.add_argument("--headless")  # モニタリングなし
     options.page_load_strategy = "eager"  #  読み込み省略(画像省略)
-    service = ChromeService("/usr/bin/chromedriver")
-    driver = webdriver.Chrome(service=service, options=options)
+    driver = webdriver.Remote(
+        command_executor=os.environ["SELENIUM_URL"], options=options
+    )
     return driver
 
 
@@ -33,7 +34,7 @@ def scraping_all_site(product: Product) -> list[Item]:
     driver = setting_driver()
 
     def get_items_all_pages(
-        get_item_from_page: Callable[[webdriver.Chrome, str], list[Item]],
+        get_item_from_page: Callable[[webdriver.Remote, str], list[Item]],
         generate_url: Callable[[int], str],
     ) -> list[Item]:
         Item_list: list[Item] = []

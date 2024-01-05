@@ -1,4 +1,3 @@
-from domain.tools import retry_get_element, retry_get_request
 from errors import ItemNotFoundError
 from models import Item, Site
 from selenium import webdriver
@@ -6,8 +5,10 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
+from domain.tools import retry_get_element, retry_get_request
 
-def check_item_not_found(driver: webdriver.Chrome) -> None:
+
+def check_item_not_found(driver: webdriver.Remote) -> None:
     def get_elem_not_found() -> WebElement:
         not_found_elem = driver.find_element(
             By.XPATH,
@@ -42,7 +43,7 @@ def check_item_not_found(driver: webdriver.Chrome) -> None:
 
 
 @retry_get_request
-def get_items(driver: webdriver.Chrome, url: str) -> list[Item]:
+def get_items(driver: webdriver.Remote, url: str) -> list[Item]:
     driver.get(url)
 
     @retry_get_element
