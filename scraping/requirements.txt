@@ -1,3 +1,4 @@
 selenium
-fastapi[all]
-requests
+fastapi
+uvicorn[standard]
+pydantic
