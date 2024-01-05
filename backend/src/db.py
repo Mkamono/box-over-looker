@@ -2,7 +2,7 @@ import os
 from uuid import uuid4
 
 import sqlalchemy
-from models import ItemRecord, ScrapingResults
+from models import AnalysisRecord, ItemRecord, ScrapingResults
 from sqlalchemy.orm import Session
 
 
@@ -18,9 +18,10 @@ def create_session(db_name: str, driver: str = "postgres") -> Session:
     raise ValueError("Invalid driver")
 
 
-def migrate_db(db_name: str):
+def migrate_db(db_name: str) -> None:
     session = create_session(db_name)
     ItemRecord.metadata.create_all(session.get_bind())
+    AnalysisRecord.metadata.create_all(session.get_bind())
     session.commit()
     session.close()
 
