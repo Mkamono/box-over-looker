@@ -2,7 +2,12 @@ import os
 from uuid import uuid4
 
 import sqlalchemy
-from models import AnalysisRecord, ItemRecord, ScrapingResults
+from detect import to_analysis_records
+from models import (
+    AnalysisRecord,
+    ItemRecord,
+    ScrapingResults,
+)
 from sqlalchemy.orm import Session
 
 
@@ -31,6 +36,13 @@ def create_item_records(db_name: str, results: ScrapingResults):
 
     session.add_all([item.to_record() for item in results.scraping_results])
 
+    session.commit()
+    session.close()
+
+
+def create_analysis_records(db_name: str, scraping_results: ScrapingResults):
+    session = create_session(db_name)
+    session.add_all(to_analysis_records(scraping_results))
     session.commit()
     session.close()
 
