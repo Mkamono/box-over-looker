@@ -1,14 +1,14 @@
 from uuid import uuid4
 
-from models import AnalysisRecord, Product, ScrapingResults
+from models import Analysis, Product, ScrapingResults
 
 
-def to_analysis_records(scraping_results: ScrapingResults) -> list[AnalysisRecord]:
-    analysis_records: list[AnalysisRecord] = []
+def to_analysis(scraping_results: ScrapingResults) -> list[Analysis]:
+    analysis: list[Analysis] = []
 
     for product in Product:
-        analysis_records.append(
-            AnalysisRecord(
+        analysis.append(
+            Analysis(
                 ID=str(uuid4()),
                 date=scraping_results.scraping_results[0].date.replace(
                     minute=0, second=0, microsecond=0
@@ -18,7 +18,7 @@ def to_analysis_records(scraping_results: ScrapingResults) -> list[AnalysisRecor
             )
         )
 
-    return analysis_records
+    return analysis
 
 
 def calc_median(product: Product, results: ScrapingResults) -> float:

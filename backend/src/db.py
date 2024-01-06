@@ -2,7 +2,7 @@ import os
 from uuid import uuid4
 
 import sqlalchemy
-from calc import to_analysis_records
+from calc import to_analysis
 from models import (
     AnalysisRecord,
     ItemRecord,
@@ -42,7 +42,9 @@ def create_item_records(db_name: str, results: ScrapingResults):
 
 def create_analysis_records(db_name: str, scraping_results: ScrapingResults):
     session = create_session(db_name)
-    session.add_all(to_analysis_records(scraping_results))
+    session.add_all(
+        [analysis.to_record() for analysis in to_analysis(scraping_results)]
+    )
     session.commit()
     session.close()
 
