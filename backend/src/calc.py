@@ -6,7 +6,7 @@ from models import AnalysisRecord, Product, ScrapingResults
 def to_analysis_records(scraping_results: ScrapingResults) -> list[AnalysisRecord]:
     analysis_records: list[AnalysisRecord] = []
 
-    [
+    for product in Product:
         analysis_records.append(
             AnalysisRecord(
                 ID=str(uuid4()),
@@ -17,8 +17,7 @@ def to_analysis_records(scraping_results: ScrapingResults) -> list[AnalysisRecor
                 product=product,
             )
         )
-        for product in Product
-    ]
+
     return analysis_records
 
 
@@ -27,13 +26,16 @@ def calc_median(product: Product, results: ScrapingResults) -> float:
     for item in results.scraping_results:
         if item.product == product:
             price_list.append(item.Item.price)
+
     price_list.sort()
+
     if len(price_list) == 0:
-        raise ValueError("Empty list")
+        raise ValueError("scrapping_results is empty.")
     elif len(price_list) % 2 == 0:
         median: float = (
             price_list[len(price_list) // 2] + price_list[len(price_list) // 2 - 1]
         ) / 2
     else:
         median: float = price_list[len(price_list) // 2]
+
     return median
