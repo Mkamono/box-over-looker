@@ -2,7 +2,7 @@ import os
 from uuid import uuid4
 
 import sqlalchemy
-from detect import to_analysis_records
+from calc import to_analysis_records
 from models import (
     AnalysisRecord,
     ItemRecord,
