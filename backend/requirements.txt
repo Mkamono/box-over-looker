@@ -1,5 +1,7 @@
-fastapi[all]
+fastapi
 sqlalchemy
 requests
+pydantic
+uvicorn
 schedule
 psycopg2-binary
