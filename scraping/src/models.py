@@ -29,7 +29,7 @@ class Item(BaseModel):
 
 class ScrapingResult(BaseModel):
     date: datetime
-    Item: Item
+    item: Item
     product: Product
 
 
