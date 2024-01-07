@@ -1,4 +1,4 @@
-FROM --platform=linux/arm64 python:3.11-slim-bullseye
+FROM python:3.11-slim-bullseye
 
 RUN apt update && \
     apt install -y locales && \
