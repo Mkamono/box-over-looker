@@ -1,24 +1,24 @@
 from datetime import datetime
-from enum import IntEnum
+from enum import StrEnum
 
 from pydantic import BaseModel
 
 
-class Product(IntEnum):
-    ポケモンカード151 = 1
-    黒炎の支配者 = 2
-    レイジングサーフ = 3
+class Site(StrEnum):
+    メルカリ = "メルカリ"
+    Paypayフリマ = "Paypayフリマ"
+    楽天ラクマ = "楽天ラクマ"
+    ヤフオク = "ヤフオク"
+    スニーカーダンク = "スニーカーダンク"
+    amazon = "amazon"
+    楽天市場 = "楽天市場"
+    ヤフーショッピング = "ヤフーショッピング"
 
 
-class Site(IntEnum):
-    メルカリ = 1
-    Paypayフリマ = 2
-    楽天ラクマ = 3
-    ヤフオク = 4
-    スニーカーダンク = 5
-    amazon = 6
-    楽天市場 = 7
-    ヤフーショッピング = 8
+class Product(StrEnum):
+    ポケモンカード151 = "ポケモンカード151"
+    黒炎の支配者 = "黒炎の支配者"
+    レイジングサーフ = "レイジングサーフ"
 
 
 class Item(BaseModel):
