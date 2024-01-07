@@ -1,11 +1,11 @@
-from domain.tools import retry_get_element, retry_get_request
 from models import Item, Product, Site
-from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webelement import WebElement
+from webdriver import Driver, WebElement
+
+from domain.tools import retry_get_element, retry_get_request
 
 
-def login(driver: webdriver.Chrome) -> None:
+def login(driver: Driver) -> None:
     url_login = "https://snkrdunk.com/accounts/login/"
     driver.get(url_login)
 
@@ -31,7 +31,7 @@ def login(driver: webdriver.Chrome) -> None:
 
 
 @retry_get_request
-def get_items(driver: webdriver.Chrome, url: str, product: Product) -> list[Item]:
+def get_items(driver: Driver, url: str, product: Product) -> list[Item]:
     login(driver)
 
     driver.get(url)
