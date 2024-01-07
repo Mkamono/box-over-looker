@@ -32,8 +32,8 @@ services:
     ports:
       - ${POSTGRES_PORT}:5432
     volumes:
-      - postgres_volume:/var/lib/postgresql/data
+      - postgres_volume_main:/var/lib/postgresql/data
     env_file:
       - .env
 volumes:
-  postgres_volume:
+  postgres_volume_main:
