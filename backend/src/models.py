@@ -131,7 +131,7 @@ class Analysis(BaseModel):
     median: float
     date: datetime
 
-    def model_post_init(self, __context):
+    def model_post_init(self, __context) -> None:
         if self.ID is None:
             self.ID = uuid4()
 
