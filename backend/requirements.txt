@@ -2,6 +2,6 @@ fastapi
 sqlalchemy
 requests
 pydantic
-uvicorn
+uvicorn[standard]
 schedule
 psycopg2-binary
