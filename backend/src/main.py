@@ -1,6 +1,7 @@
 import os
 from multiprocessing import Process
 from time import sleep
+
 from migrate import migrate_db
 from scheduler import exec_regularly
 from server import run_server
