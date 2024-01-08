@@ -1,8 +1,12 @@
 import os
-from uuid import uuid4
 
 import sqlalchemy
-from models import AnalysisRecord, ItemRecord, ScrapingResults
+from models import (
+    Analysis,
+    AnalysisRecord,
+    ItemRecord,
+    ScrapingResults,
+)
 from sqlalchemy.orm import Session
 
 
@@ -28,9 +32,14 @@ def migrate_db(db_name: str) -> None:
 
 def create_item_records(db_name: str, results: ScrapingResults):
     session = create_session(db_name)
-
     session.add_all([item.to_record() for item in results.scraping_results])
+    session.commit()
+    session.close()
 
+
+def create_analysis_records(db_name: str, analysis: list[Analysis]):
+    session = create_session(db_name)
+    session.add_all([item.to_record() for item in analysis])
     session.commit()
     session.close()
 
