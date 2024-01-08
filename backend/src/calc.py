@@ -25,7 +25,7 @@ def make_analysis_list(
         median = statistics.median(prices)
         return median
 
-    analysis_list_every_product = [
+    analysis_list = [
         Analysis(
             date=scraping_datetime,
             product=product,
