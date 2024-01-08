@@ -1,4 +1,5 @@
 import statistics
+from datetime import datetime
 
 from models import Analysis, Product, ScrapingResults
 
@@ -35,3 +36,15 @@ def make_analysis_list(
     ]
 
     return analysis_list
+
+
+def calc_average_median_price(
+    analysis_list: list[Analysis], product: Product, filter_date: datetime
+) -> float:
+    return statistics.mean(
+        [
+            analysis.median
+            for analysis in analysis_list
+            if analysis.product == product and analysis.date >= filter_date
+        ]
+    )
