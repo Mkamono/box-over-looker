@@ -34,12 +34,4 @@ def make_analysis_list(
         for product in Product
     ]
 
-    return analysis_list_every_product
-
-
-def calc_price_median(items: ScrapingResults) -> float:
-    price_list: list[float] = [
-        item.price for item in items.scraping_results if item.price is not None
-    ]
-    median = statistics.median(price_list)
-    return median
+    return analysis_list
