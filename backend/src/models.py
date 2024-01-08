@@ -1,10 +1,13 @@
 import os
 from datetime import datetime
-from enum import IntEnum
+from enum import StrEnum
+from typing import Optional
+from uuid import UUID as uuid
+from uuid import uuid4
 
 import requests
-from pydantic import BaseModel
-from sqlalchemy import Column, DateTime, Enum, Float, Integer, String
+from pydantic import BaseModel, ConfigDict
+from sqlalchemy import UUID, Column, DateTime, Enum, Float, Integer, String
 from sqlalchemy.orm import DeclarativeBase
 
 
@@ -24,21 +27,21 @@ class Mail(BaseModel):
             print(e)
 
 
-class Site(IntEnum):
-    メルカリ = 1
-    Paypayフリマ = 2
-    楽天ラクマ = 3
-    ヤフオク = 4
-    スニーカーダンク = 5
-    amazon = 6
-    楽天市場 = 7
-    ヤフーショッピング = 8
+class Site(StrEnum):
+    メルカリ = "メルカリ"
+    Paypayフリマ = "Paypayフリマ"
+    楽天ラクマ = "楽天ラクマ"
+    ヤフオク = "ヤフオク"
+    スニーカーダンク = "スニーカーダンク"
+    amazon = "amazon"
+    楽天市場 = "楽天市場"
+    ヤフーショッピング = "ヤフーショッピング"
 
 
-class Product(IntEnum):
-    ポケモンカード151 = 1
-    黒炎の支配者 = 2
-    レイジングサーフ = 3
+class Product(StrEnum):
+    ポケモンカード151 = "ポケモンカード151"
+    黒炎の支配者 = "黒炎の支配者"
+    レイジングサーフ = "レイジングサーフ"
 
 
 class Base(DeclarativeBase):
@@ -52,19 +55,53 @@ class Item(BaseModel):
 
 
 class ScrapingResult(BaseModel):
-    ID: str = ""
+    model_config = ConfigDict(from_attributes=True)
+
+    ID: Optional[uuid] = None
     date: datetime
-    Item: Item
     product: Product
+
+    item: Optional[Item] = None
+    title: Optional[str] = None
+    price: Optional[int] = None
+    site: Optional[Site] = None
+
+    def fill_item(self) -> None:
+        # self.itemまたはtitle, price, siteのどちらか存在している方を採用する
+        if self.item is None:
+            if self.title is None or self.price is None or self.site is None:
+                raise ValueError("item or title, price, site must be set.")
+            self.item = Item(
+                title=self.title,
+                price=self.price,
+                site=self.site,
+            )
+
+        if any(
+            [
+                self.title is None,
+                self.price is None,
+                self.site is None,
+            ]
+        ):
+            self.title = self.item.title
+            self.price = self.item.price
+            self.site = self.item.site
+
+    def model_post_init(self, __context) -> None:
+        if self.ID is None:
+            self.ID = uuid4()
+
+        self.fill_item()
 
     def to_record(self):
         return ItemRecord(
             ID=self.ID,
-            date=str(self.date),
-            title=self.Item.title,
-            price=self.Item.price,
-            site=self.Item.site.name,
-            product=self.product.name,
+            date=self.date,
+            title=self.title,
+            price=self.price,
+            site=self.site,
+            product=self.product,
         )
 
 
@@ -74,75 +111,45 @@ class ScrapingResults(BaseModel):
 
 class ItemRecord(Base):
     __tablename__ = "items"
-    ID = Column(String, primary_key=True)
-    date = Column(String, nullable=False)
+    ID = Column(UUID, primary_key=True)
+    date = Column(DateTime, nullable=False)
+    product = Column(Enum(Product), nullable=False)
+
     title = Column(String, nullable=False)
     price = Column(Integer, nullable=False)
-    site = Column(String, nullable=False)
-    product = Column(String, nullable=False)
-
-    def format_via_str(self, value, target_type: type):
-        return target_type(str(value))
-
-    def format_to_site(self, site_name: Column) -> Site:
-        for site in Site:
-            if str(site_name) == site.name:
-                return site
-        else:
-            raise ValueError(f"site_name: {site_name} is not in Site.")
-
-    def format_to_product(self, product_name: Column) -> Product:
-        for product in Product:
-            if str(product_name) == product.name:
-                return product
-        else:
-            raise ValueError(f"product_name: {product_name} is not in Product.")
-
-    def format_to_datetime(self, date: Column) -> datetime:
-        return datetime.strptime(str(date), "%Y-%m-%d %H:%M:%S.%f")
+    site = Column(Enum(Site), nullable=False)
 
     def to_scraping_result(self):
-        return ScrapingResult(
-            ID=self.format_via_str(self.ID, str),
-            date=self.format_to_datetime(self.date),
-            Item=Item(
-                title=self.format_via_str(self.title, str),
-                price=self.format_via_str(self.price, int),
-                site=self.format_to_site(self.site),
-            ),
-            product=self.format_to_product(self.product),
-        )
+        return ScrapingResult.model_validate(self)
 
 
 class Analysis(BaseModel):
-    ID: str = ""
+    model_config = ConfigDict(from_attributes=True)
+
+    ID: Optional[uuid] = None
     product: Product
     median: float
     date: datetime
 
+    def model_post_init(self, __context) -> None:
+        if self.ID is None:
+            self.ID = uuid4()
+
     def to_record(self):
         return AnalysisRecord(
             ID=self.ID,
-            date=str(self.date),
+            date=self.date,
             median=self.median,
-            product=self.product.name,
+            product=self.product,
         )
 
 
 class AnalysisRecord(Base):
     __tablename__ = "analysis"
-    ID = Column(String, primary_key=True)
+    ID = Column(UUID, primary_key=True)
     date = Column(DateTime, nullable=False)
     median = Column(Float, nullable=False)
     product = Column(Enum(Product), nullable=False)
 
-    def format_via_str(self, value, target_type: type):
-        return target_type(str(value))
-
     def to_analysis(self):
-        return Analysis(
-            ID=self.format_via_str(self.ID, str),
-            date=datetime.strptime(str(self.date), "%Y-%m-%d %H:%M:%S.%f"),
-            median=self.format_via_str(self.median, float),
-            product=Product[self.product.name],
-        )
+        return Analysis.model_validate(self)

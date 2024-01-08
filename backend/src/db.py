@@ -28,8 +28,6 @@ def migrate_db(db_name: str) -> None:
 
 def create_item_records(db_name: str, results: ScrapingResults):
     session = create_session(db_name)
-    for item in results.scraping_results:
-        item.ID = str(uuid4())
 
     session.add_all([item.to_record() for item in results.scraping_results])
 

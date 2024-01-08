@@ -20,7 +20,7 @@ def get_ScrapingResults() -> ScrapingResults:
 
     for product in Product:
         items = [
-            ScrapingResult(date=datetime.datetime.now(), Item=item, product=product)
+            ScrapingResult(date=datetime.datetime.now(), item=item, product=product)
             for item in scraping_all_site(product)
         ]
         scraping_results += items
@@ -35,12 +35,12 @@ def get_ScrapingResults_mock() -> ScrapingResults:
         scraping_results=[
             ScrapingResult(
                 date=datetime.datetime.now(),
-                Item=Item(title="mock_1", price=5000, site=Site.メルカリ),
+                item=Item(title="mock_1", price=5000, site=Site.メルカリ),
                 product=Product.ポケモンカード151,
             ),
             ScrapingResult(
                 date=datetime.datetime.now(),
-                Item=Item(title="mock_2", price=6000, site=Site.ヤフオク),
+                item=Item(title="mock_2", price=6000, site=Site.ヤフオク),
                 product=Product.黒炎の支配者,
             ),
         ]
