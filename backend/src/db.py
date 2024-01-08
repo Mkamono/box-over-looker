@@ -49,6 +49,8 @@ def read_item_records(db_name: str) -> list[ItemRecord]:
     records = session.query(ItemRecord).all()
     session.close()
     return records
+
+
 def read_analysis_records(db_name: str) -> list[AnalysisRecord]:
     session = create_session(db_name)
     records = session.query(AnalysisRecord).all()
