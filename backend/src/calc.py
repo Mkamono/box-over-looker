@@ -3,46 +3,34 @@ import statistics
 from models import Analysis, Product, ScrapingResults
 
 
-def make_median_list_every_product(
-    single_exec_scraping_results: ScrapingResults,
+def make_analysis_list_every_product(
+    scraping_results: ScrapingResults,
 ) -> list[Analysis]:
-    """
-    スクレイピング一回収集分の商品データから各商品ごとの中央値を計算して、リスト形式で返します。
+    scraping_datetime = scraping_results.scraping_results[0].date
 
-    Parameters:
-    single_exec_scraping_results (ScrapingResults): 一回分のスクレイピングによる商品データ
+    def calc_price_median_by_product(
+        product: Product, scraping_results: ScrapingResults
+    ) -> float:
+        return calc_price_median(
+            ScrapingResults(
+                scraping_results=[
+                    item
+                    for item in scraping_results.scraping_results
+                    if item.product == product
+                ]
+            )
+        )
 
-    Returns:
-    list[Analysis]: 各製品の価格中央値を含むAnalysisオブジェクトのリスト。
-    """
-
-    scraping_datetime = single_exec_scraping_results.scraping_results[0].date.replace(
-        minute=0, second=0, microsecond=0
-    )
-    median_list_every_product = [
+    analysis_list_every_product = [
         Analysis(
             date=scraping_datetime,
             product=product,
-            median=calc_price_median_by_product(product, single_exec_scraping_results),
+            median=calc_price_median_by_product(product, scraping_results),
         )
         for product in Product
     ]
 
-    return median_list_every_product
-
-
-def calc_price_median_by_product(
-    product: Product, single_exec_scraping_results: ScrapingResults
-) -> float:
-    return calc_price_median(
-        ScrapingResults(
-            scraping_results=[
-                item
-                for item in single_exec_scraping_results.scraping_results
-                if item.product == product
-            ]
-        )
-    )
+    return analysis_list_every_product
 
 
 def calc_price_median(Items: ScrapingResults) -> float:
