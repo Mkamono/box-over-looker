@@ -1,6 +1,7 @@
 import statistics
-from datetime import datetime
+from datetime import datetime, timedelta
 
+from db import read_analysis_by_datetime
 from models import Analysis, Product, ScrapingResults
 
 
@@ -38,13 +39,15 @@ def make_analysis_list(
     return analysis_list
 
 
-def calc_average_median_price(
-    analysis_list: list[Analysis], product: Product, filter_date: datetime
-) -> float:
+def calc_average_median_price_in_week(db_name: str, product: Product) -> float:
+    filter_datetime = datetime.now() - timedelta(days=7)
+    # 現在から１週間前のdatetimeを取得
+
+    filtered_analysis_list = read_analysis_by_datetime(db_name, filter_datetime)
     return statistics.mean(
         [
             analysis.median
-            for analysis in analysis_list
-            if analysis.product == product and analysis.date >= filter_date
+            for analysis in filtered_analysis_list
+            if analysis.product == product
         ]
     )
