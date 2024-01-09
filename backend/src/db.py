@@ -59,6 +59,8 @@ def read_analysis_records(db_name: str) -> list[AnalysisRecord]:
     return records
 
 
-def read_analysis_by_datetime(db_name: str, datetime: datetime) -> list[Analysis]:
+def read_analysis_by_datetime(
+    db_name: str, filter_datetime: datetime
+) -> list[Analysis]:
     analysis_list = [record.to_analysis() for record in read_analysis_records(db_name)]
-    return [analysis for analysis in analysis_list if analysis.date >= datetime]
+    return [analysis for analysis in analysis_list if analysis.date >= filter_datetime]
