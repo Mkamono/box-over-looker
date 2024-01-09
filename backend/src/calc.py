@@ -55,7 +55,3 @@ def calc_average_median_price_in_week(db_name: str, product: Product) -> float:
             if analysis.product == product
         ]
     )
-
-
-if __name__ == "__main__":
-    print(calc_average_median_price_in_week("items", Product.ポケモンカード151))
