@@ -73,7 +73,7 @@ def read_analysis_by_datetime_range(
 
 
     Returns:
-        list[Analysis]:Analysisのリスト
+        list[Analysis]: 指定した期間のAnalysisリストを返します。
     """
     analysis_list = [record.to_analysis() for record in read_analysis_records(db_name)]
     return [
