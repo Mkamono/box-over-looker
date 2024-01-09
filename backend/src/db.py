@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 import sqlalchemy
 from models import (
@@ -56,3 +57,8 @@ def read_analysis_records(db_name: str) -> list[AnalysisRecord]:
     records = session.query(AnalysisRecord).all()
     session.close()
     return records
+
+
+def read_analysis_by_datetime(db_name: str, datetime: datetime) -> list[Analysis]:
+    analysis_list = [record.to_analysis() for record in read_analysis_records(db_name)]
+    return [analysis for analysis in analysis_list if analysis.date >= datetime]
