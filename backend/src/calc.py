@@ -1,7 +1,7 @@
 import statistics
 from datetime import datetime, timedelta
 
-from db import read_analysis_by_datetime
+from db import read_analysis_by_datetime_range
 from models import Analysis, Product, ScrapingResults
 
 
@@ -40,10 +40,14 @@ def make_analysis_list(
 
 
 def calc_average_median_price_in_week(db_name: str, product: Product) -> float:
-    filter_datetime = datetime.now() - timedelta(days=7)
+    filter_start_datetime = datetime.now()
+    filter_end_datetime = filter_start_datetime - timedelta(days=7)
     # 現在から１週間前のdatetimeを取得
 
-    filtered_analysis_list = read_analysis_by_datetime(db_name, filter_datetime)
+    filtered_analysis_list = read_analysis_by_datetime_range(
+        db_name, (filter_start_datetime, filter_end_datetime)
+    )
+
     return statistics.mean(
         [
             analysis.median
@@ -51,3 +55,7 @@ def calc_average_median_price_in_week(db_name: str, product: Product) -> float:
             if analysis.product == product
         ]
     )
+
+
+if __name__ == "__main__":
+    print(calc_average_median_price_in_week("items", Product.ポケモンカード151))

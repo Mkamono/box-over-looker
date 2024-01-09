@@ -59,8 +59,25 @@ def read_analysis_records(db_name: str) -> list[AnalysisRecord]:
     return records
 
 
-def read_analysis_by_datetime(
-    db_name: str, filter_datetime: datetime
+def read_analysis_by_datetime_range(
+    db_name: str, datetime_range: tuple[datetime, datetime]
 ) -> list[Analysis]:
+    """_summary_
+    この関数は、引数で指定した期間のAnalysisリストを返します。
+
+    Args:
+        db_name (str): DBのサーバー名を指定します
+
+        datetime_range (tuple[datetime, datetime]):検索する期間のdatetimeを指定します。
+        datetime_range[0]は期間開始のdatetimeを、datetime_range[1]は期間終了のdatetimeを指定します。
+
+
+    Returns:
+        list[Analysis]:Analysisのリスト
+    """
     analysis_list = [record.to_analysis() for record in read_analysis_records(db_name)]
-    return [analysis for analysis in analysis_list if analysis.date >= filter_datetime]
+    return [
+        analysis
+        for analysis in analysis_list
+        if datetime_range[0] <= analysis.date <= datetime_range[1]
+    ]
