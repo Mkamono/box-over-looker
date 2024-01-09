@@ -1,13 +1,14 @@
 import os
-from datetime import datetime
 
 import sqlalchemy
 from models import (
     Analysis,
     AnalysisRecord,
     ItemRecord,
+    RangeDatetime,
     ScrapingResults,
 )
+from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
 
@@ -59,25 +60,17 @@ def read_analysis_records(db_name: str) -> list[AnalysisRecord]:
     return records
 
 
-def read_analysis_by_datetime_range(
-    db_name: str, datetime_range: tuple[datetime, datetime]
-) -> list[Analysis]:
-    """_summary_
-    この関数は、引数で指定した期間のAnalysisリストを返します。
-
-    Args:
-        db_name (str): DBのサーバー名を指定します
-
-        datetime_range (tuple[datetime, datetime]):検索する期間のdatetimeを指定します。
-        datetime_range[0]は期間開始のdatetimeを、datetime_range[1]は期間終了のdatetimeを指定します。
-
-
-    Returns:
-        list[Analysis]: 指定した期間のAnalysisリストを返します。
-    """
-    analysis_list = [record.to_analysis() for record in read_analysis_records(db_name)]
-    return [
-        analysis
-        for analysis in analysis_list
-        if datetime_range[0] <= analysis.date <= datetime_range[1]
-    ]
+def read_analysis_by_datetime_range(db_name: str, datetime_range: RangeDatetime):
+    session = create_session(db_name)
+    records = (
+        session.query(AnalysisRecord)
+        .filter(
+            and_(
+                AnalysisRecord.date >= datetime_range.old,
+                AnalysisRecord.date <= datetime_range.new,
+            )
+        )
+        .all()
+    )
+    session.close()
+    return records
