@@ -72,7 +72,8 @@ def read_analysis_by_datetime(db_name: str, datetime_range: RangeDatetime):
         session.query(AnalysisRecord)
         .filter(
             and_(
-                datetime_range.old <= AnalysisRecord.date <= datetime_range.new,
+                AnalysisRecord.date >= datetime_range.old,
+                AnalysisRecord.date <= datetime_range.new,
             )
         )
         .all()
