@@ -1,8 +1,7 @@
 import statistics
-from datetime import datetime, timedelta
 
-from db import read_analysis_by_datetime_range
-from models import Analysis, Product, RangeDatetime, ScrapingResults
+from db import RangeDatetime, read_analysis_by_datetime
+from models import Analysis, Product, ScrapingResults
 
 
 def make_analysis_list(
@@ -39,13 +38,11 @@ def make_analysis_list(
     return analysis_list
 
 
-def calc_average_median_price_in_week(db_name: str, product: Product) -> float:
-    # 現在から１週間前のdatetimeを取得
-    start_datetime = datetime.now()
-    end_datetime = start_datetime - timedelta(days=7)
-
-    analysis_record_list = read_analysis_by_datetime_range(
-        db_name, RangeDatetime(new=start_datetime, old=end_datetime)
+def calc_average_median_price_in_range(
+    db_name: str, product: Product, datetime_range: RangeDatetime
+) -> float:
+    analysis_record_list = read_analysis_by_datetime(
+        db_name, RangeDatetime(new=datetime_range.new, old=datetime_range.old)
     )
 
     return statistics.mean(
