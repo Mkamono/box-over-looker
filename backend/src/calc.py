@@ -38,11 +38,11 @@ def make_analysis_list(
     return analysis_list
 
 
-def calc_average_median_price_in_range(
+def calc_average_median_price(
     db_name: str, product: Product, datetime_range: RangeDatetime
 ) -> float:
     analysis_record_list = read_analysis_by_datetime(
-        db_name, RangeDatetime(new=datetime_range.new, old=datetime_range.old)
+        db_name, datetime_range=datetime_range
     )
 
     return statistics.mean(
