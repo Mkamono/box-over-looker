@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 import sqlalchemy
 from models import (
@@ -7,6 +8,8 @@ from models import (
     ItemRecord,
     ScrapingResults,
 )
+from pydantic import BaseModel
+from sqlalchemy import and_
 from sqlalchemy.orm import Session
 
 
@@ -54,5 +57,26 @@ def read_item_records(db_name: str) -> list[ItemRecord]:
 def read_analysis_records(db_name: str) -> list[AnalysisRecord]:
     session = create_session(db_name)
     records = session.query(AnalysisRecord).all()
+    session.close()
+    return records
+
+
+class RangeDatetime(BaseModel):
+    new: datetime
+    old: datetime
+
+
+def read_analysis_by_datetime(db_name: str, datetime_range: RangeDatetime):
+    session = create_session(db_name)
+    records = (
+        session.query(AnalysisRecord)
+        .filter(
+            and_(
+                AnalysisRecord.date >= datetime_range.old,
+                AnalysisRecord.date <= datetime_range.new,
+            )
+        )
+        .all()
+    )
     session.close()
     return records
