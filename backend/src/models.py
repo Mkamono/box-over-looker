@@ -153,8 +153,3 @@ class AnalysisRecord(Base):
 
     def to_analysis(self):
         return Analysis.model_validate(self)
-
-
-class RangeDatetime(BaseModel):
-    new: datetime
-    old: datetime
