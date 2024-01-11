@@ -25,7 +25,3 @@ def get_notification_timing() -> NotificationTiming:
             time, convert_to_bool(os.environ[f"NOTIFICATION_TIMING_{time.upper()}"])
         )
     return notification_timing
-
-
-if __name__ == "__main__":
-    print(get_notification_timing())
