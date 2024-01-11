@@ -11,17 +11,21 @@ class NotificationTiming(BaseModel):
 
 
 def get_notification_timing() -> NotificationTiming:
-    def to_bool(value: str) -> bool:
-        if value == "True":
+    def convert_to_bool(string: str) -> bool:
+        if string == "True":
             return True
-        elif value == "False":
+        elif string == "False":
             return False
         else:
-            raise ValueError(f"{value} is not True or False")
+            raise ValueError(f"Invalid value: {string}")
 
     notification_timing = NotificationTiming()
-    notification_timing.zero = to_bool(os.environ["NOTIFICATION_TIMING_ZERO"])
-    notification_timing.six = to_bool(os.environ["NOTIFICATION_TIMING_SIX"])
-    notification_timing.twelve = to_bool(os.environ["NOTIFICATION_TIMING_TWELVE"])
-    notification_timing.eighteen = to_bool(os.environ["NOTIFICATION_TIMING_EIGHTEEN"])
+    notification_timing.zero = convert_to_bool(os.environ["NOTIFICATION_TIMING_ZERO"])
+    notification_timing.six = convert_to_bool(os.environ["NOTIFICATION_TIMING_SIX"])
+    notification_timing.twelve = convert_to_bool(
+        os.environ["NOTIFICATION_TIMING_TWELVE"]
+    )
+    notification_timing.eighteen = convert_to_bool(
+        os.environ["NOTIFICATION_TIMING_EIGHTEEN"]
+    )
     return notification_timing
