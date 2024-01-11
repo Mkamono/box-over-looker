@@ -8,3 +8,10 @@ class NotificationTiming(BaseModel):
     six: bool = False
     twelve: bool = False
     eighteen: bool = False
+
+
+class EnvConfig(BaseModel):
+    mail: str
+    threshold_increase_rate_price: float
+    notification_timing: NotificationTiming
+    period_days: int
