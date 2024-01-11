@@ -20,12 +20,12 @@ def get_notification_timing() -> NotificationTiming:
             raise ValueError(f"Invalid value: {string}")
 
     notification_timing = NotificationTiming()
-    notification_timing.zero = convert_to_bool(os.environ["NOTIFICATION_TIMING_ZERO"])
-    notification_timing.six = convert_to_bool(os.environ["NOTIFICATION_TIMING_SIX"])
-    notification_timing.twelve = convert_to_bool(
-        os.environ["NOTIFICATION_TIMING_TWELVE"]
-    )
-    notification_timing.eighteen = convert_to_bool(
-        os.environ["NOTIFICATION_TIMING_EIGHTEEN"]
-    )
+    for time in notification_timing.model_dump():
+        notification_timing.__setattr__(
+            time, convert_to_bool(os.environ[f"NOTIFICATION_TIMING_{time.upper()}"])
+        )
     return notification_timing
+
+
+if __name__ == "__main__":
+    print(get_notification_timing())
