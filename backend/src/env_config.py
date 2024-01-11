@@ -4,17 +4,10 @@ from pydantic import BaseModel
 
 
 class NotificationTiming(BaseModel):
-    zero: bool = True
+    zero: bool = False
     six: bool = False
     twelve: bool = False
     eighteen: bool = False
-
-
-class EnvConfig(BaseModel):
-    mail: str
-    threshold_increase_rate_price: float
-    notification_timing: NotificationTiming
-    period_days: int
 
 
 def get_notification_timing() -> NotificationTiming:
@@ -32,14 +25,3 @@ def get_notification_timing() -> NotificationTiming:
     notification_timing.twelve = to_bool(os.environ["NOTIFICATION_TIMING_TWELVE"])
     notification_timing.eighteen = to_bool(os.environ["NOTIFICATION_TIMING_EIGHTEEN"])
     return notification_timing
-
-
-def get_env_config() -> EnvConfig:
-    return EnvConfig(
-        mail=os.environ["USER_ADDRESS"],
-        threshold_increase_rate_price=float(
-            os.environ["THRESHOLD_INCREASE_RATE_PRICE"]
-        ),
-        notification_timing=get_notification_timing(),
-        period_days=int(os.environ["PERIOD_DAYS"]),
-    )
