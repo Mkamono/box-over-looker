@@ -32,3 +32,14 @@ def get_notification_timing() -> NotificationTiming:
     notification_timing.twelve = to_bool(os.environ["NOTIFICATION_TIMING_TWELVE"])
     notification_timing.eighteen = to_bool(os.environ["NOTIFICATION_TIMING_EIGHTEEN"])
     return notification_timing
+
+
+def get_env_config() -> EnvConfig:
+    return EnvConfig(
+        mail=os.environ["USER_ADDRESS"],
+        threshold_increase_rate_price=float(
+            os.environ["THRESHOLD_INCREASE_RATE_PRICE"]
+        ),
+        notification_timing=get_notification_timing(),
+        period_days=int(os.environ["PERIOD_DAYS"]),
+    )
