@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from calc import calc_average_median_price, get_current_median_price
 from db import RangeDatetime
-from env_config import EnvConfig
+from env_config import get_env_config
 from models import BaseModel, Product
 
 
@@ -23,10 +23,11 @@ class ComparedResult(BaseModel):
     increase_price_percentage: float
 
 
-def make_compared_result_list(env_config: EnvConfig) -> list[ComparedResult]:
+def make_compared_result_list() -> list[ComparedResult]:
     db_name: str = "items"  # DBのitemsサーバーを指定
-    compared_result_list: list[ComparedResult] = []
+    env_config = get_env_config()  # ユーザー設定の環境変数を読み込む
 
+    compared_result_list: list[ComparedResult] = []
     for product in Product:
         current_price = get_current_median_price(
             db_name=db_name,
