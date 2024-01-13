@@ -66,5 +66,6 @@ def get_current_median_price(
         for analysis in analysis_record_list
         if analysis.to_analysis().product == product
     ]
+    # 取得したAnalysisを日付で降順にソートして最新のものを取得する
     analysis_list.sort(key=lambda x: x.date, reverse=True)
     return analysis_list[0].median
