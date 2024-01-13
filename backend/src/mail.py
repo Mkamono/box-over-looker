@@ -8,7 +8,7 @@ class ComparedResult(BaseModel):
 
     Attributes:
         product (Product): 比較対象の商品。
-        current_price (float): 現在の商品価格。
+        current_price (float): 過去の価格の平均値と比較される現在の価格の中央値。
         is_exceed_thd (bool): 価格が閾値を超えたかどうかを示すフラグ。
         increase_price_percentage (float): 価格の上昇率。
     """
