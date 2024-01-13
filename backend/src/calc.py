@@ -1,4 +1,5 @@
 import statistics
+from datetime import datetime, timedelta
 
 from db import RangeDatetime, read_analysis_by_datetime
 from models import Analysis, Product, ScrapingResults
@@ -52,3 +53,18 @@ def calc_average_median_price(
             if analysis.to_analysis().product == product
         ]
     )
+
+
+def get_current_median_price(
+    db_name: str, product: Product, datetime_range: RangeDatetime
+) -> float:
+    analysis_record_list = read_analysis_by_datetime(
+        db_name, datetime_range=datetime_range
+    )
+    analysis_list = [
+        analysis.to_analysis()
+        for analysis in analysis_record_list
+        if analysis.to_analysis().product == product
+    ]
+    analysis_list.sort(key=lambda x: x.date, reverse=True)
+    return analysis_list[0].median
