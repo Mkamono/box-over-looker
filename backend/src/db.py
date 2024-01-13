@@ -80,3 +80,17 @@ def read_analysis_by_datetime(db_name: str, datetime_range: RangeDatetime):
     )
     session.close()
     return records
+
+
+def read_latest_analysis_record(db_name: str, product) -> AnalysisRecord:
+    session = create_session(db_name)
+    record = (
+        session.query(AnalysisRecord)
+        .order_by(AnalysisRecord.date.desc())
+        .filter(AnalysisRecord.product == product)
+        .first()
+    )
+    session.close()
+    if record is None:
+        raise ValueError("No record")
+    return record
