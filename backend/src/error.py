@@ -1,0 +1,2 @@
+class NoRecordError(Exception):
+    pass

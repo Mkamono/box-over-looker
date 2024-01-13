@@ -2,12 +2,8 @@ import os
 from datetime import datetime
 
 import sqlalchemy
-from models import (
-    Analysis,
-    AnalysisRecord,
-    ItemRecord,
-    ScrapingResults,
-)
+from error import NoRecordError
+from models import Analysis, AnalysisRecord, ItemRecord, Product, ScrapingResults
 from pydantic import BaseModel
 from sqlalchemy import and_
 from sqlalchemy.orm import Session
@@ -80,3 +76,17 @@ def read_analysis_by_datetime(db_name: str, datetime_range: RangeDatetime):
     )
     session.close()
     return records
+
+
+def read_latest_analysis_record(db_name: str, product: Product) -> AnalysisRecord:
+    session = create_session(db_name)
+    record = (
+        session.query(AnalysisRecord)
+        .order_by(AnalysisRecord.date.desc())
+        .filter(AnalysisRecord.product == product)
+        .first()
+    )
+    session.close()
+    if record is None:
+        raise NoRecordError("No record found")
+    return record
