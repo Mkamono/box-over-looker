@@ -1,6 +1,6 @@
 import statistics
 
-from db import RangeDatetime, read_analysis_by_datetime
+from db import RangeDatetime, read_analysis_by_datetime, read_latest_analysis_record
 from models import Analysis, Product, ScrapingResults
 
 
@@ -54,17 +54,6 @@ def calc_average_median_price(
     )
 
 
-def get_current_median_price(
-    db_name: str, product: Product, datetime_range: RangeDatetime
-) -> float:
-    analysis_record_list = read_analysis_by_datetime(
-        db_name, datetime_range=datetime_range
-    )
-    analysis_list = [
-        analysis.to_analysis()
-        for analysis in analysis_record_list
-        if analysis.to_analysis().product == product
-    ]
-    # 取得したAnalysisをdateで降順にソートして、最新の中央値を取得する
-    analysis_list.sort(key=lambda x: x.date, reverse=True)
-    return analysis_list[0].median
+def get_current_median_price(db_name: str, product: Product) -> float:
+    analysis_record = read_latest_analysis_record(db_name, product)
+    return analysis_record.to_analysis().median
