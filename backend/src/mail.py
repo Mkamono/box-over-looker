@@ -4,11 +4,11 @@ from pydantic import BaseModel
 
 class ComparedResult(BaseModel):
     """
-    このクラスは商品の比較結果と結果の算出に用いた値を保持します。
+    過去データとの比較結果を表すクラス。
 
     Attributes:
         product (Product): 比較対象の商品。
-        current_price (float): 過去の価格の平均値と比較される現在の価格の中央値。
+        current_price (float): 直近のスクレイピング結果における、価格の中央値。
         is_exceed_thd (bool): 価格が閾値を超えたかどうかを示すフラグ。
         increase_price_percentage (float): 価格の上昇率。
     """
