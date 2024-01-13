@@ -1,5 +1,4 @@
 import statistics
-from datetime import datetime, timedelta
 
 from db import RangeDatetime, read_analysis_by_datetime
 from models import Analysis, Product, ScrapingResults
