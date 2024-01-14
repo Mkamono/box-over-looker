@@ -44,12 +44,14 @@ def make_compared_result_list() -> list[ComparedResult]:
                 old=datetime.now() - timedelta(days=user_config.period_days),
             ),
         )
+
         if average_price != 0:
             increase_price_percentage = (
                 (current_price - average_price) / average_price
             ) * 100
         else:
             increase_price_percentage = 0.0
+
         is_exceed_thd = (
             increase_price_percentage > user_config.threshold_increase_rate_price
         )
