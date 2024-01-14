@@ -2,7 +2,8 @@ from datetime import datetime, timedelta
 
 from calc import calc_average_median_price, get_current_median_price
 from db import RangeDatetime
-from models import BaseModel, Product
+from models import Product
+from pydantic import BaseModel
 from user_config import UserConfig, get_user_config
 
 
