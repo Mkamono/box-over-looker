@@ -2,8 +2,8 @@ from datetime import datetime, timedelta
 
 from calc import calc_average_median_price, get_current_median_price
 from db import RangeDatetime
-from env_config import get_env_config
 from models import BaseModel, Product
+from user_config import UserConfig, get_user_config
 
 
 class ComparedResult(BaseModel):
@@ -24,8 +24,8 @@ class ComparedResult(BaseModel):
 
 
 def make_compared_result_list() -> list[ComparedResult]:
-    db_name: str = "items"  # DBのitemsサーバーを指定
-    env_config = get_env_config()  # ユーザー設定の環境変数を読み込む
+    db_name: str = "items"  # itemsデータベースを指定
+    user_config = get_user_config()  # ユーザー設定の環境変数を読み込む
 
     compared_result_list: list[ComparedResult] = []
     for product in Product:
