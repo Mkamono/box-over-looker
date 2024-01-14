@@ -19,7 +19,7 @@ class UserConfig(BaseModel):
 
 
 def get_user_config() -> UserConfig:
-    user_config_path = Path(__file__).parent.parent.parent / "user_config.jsonc"
+    user_config_path = Path(__file__).parent.parent / "user_config.jsonc"
     with open(
         user_config_path,
         "r",
