@@ -17,8 +17,8 @@ services:
       - .env
   backend:
     build:
-      context: ./backend
-      dockerfile: ./Dockerfile
+      context: ./
+      dockerfile: ./backend/Dockerfile
     tty: true
     ports:
       - ${BACKEND_PORT}:8001
