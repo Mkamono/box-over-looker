@@ -45,16 +45,14 @@ def make_compared_result_list() -> list[ComparedResult]:
             ),
         )
         if average_price != 0:
-            increase_price_percentage: float = (
+            increase_price_percentage = (
                 (current_price - average_price) / average_price
             ) * 100
         else:
-            increase_price_percentage: float = 0
-
-        if increase_price_percentage > user_config.threshold_increase_rate_price:
-            is_exceed_thd = True
-        else:
-            is_exceed_thd = False
+            increase_price_percentage = 0.0
+        is_exceed_thd = (
+            increase_price_percentage > user_config.threshold_increase_rate_price
+        )
 
         return ComparedResult(
             product=product,
