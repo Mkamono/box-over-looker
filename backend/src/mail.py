@@ -69,69 +69,59 @@ def make_compared_result_list() -> list[ComparedResult]:
     return compared_result_list
 
 
+def japanize_percentage(percentage: float) -> str:
+    suffix = "上昇" if percentage > 0 else "減少"
+    return f"{abs(percentage):.1f}%" + suffix
+
+
 def make_mail_body(compared_results: list[ComparedResult]) -> str:
     user_config = get_user_config()
 
-    def make_body_by_product(compared_result: ComparedResult) -> str:
-        if compared_result.is_exceed_thd:
-            price_change_word: str = "上昇"
-            word_exceed_thd: str = "急激な価格の上昇が起きています。"
-        elif compared_result.increase_price_percentage > 0:
-            price_change_word: str = "上昇"
-            word_exceed_thd: str = ""
-        else:
-            price_change_word: str = "減少"
-            word_exceed_thd: str = ""
+    now_hour = datetime.now().hour
 
-        # 1つの商品分の本文を作成する
-        body = f"・{compared_result.product}。\n現在の取引価格は約{compared_result.current_price}円です。{word_exceed_thd}過去{user_config.period_days}日間の平均価格と比較して、{compared_result.increase_price_percentage}%{price_change_word}しています。\n"
+    def make_trading_timing_txt(hour: int):
+        return f"本日の{hour}時時点での取引価格によるお知らせです。"
 
-        return body
+    def make_exceed_txt(compared_results: list[ComparedResult]) -> str:
+        if len(compared_results) == 0:
+            return ""
 
-    def make_body_core(compared_results: list[ComparedResult]) -> str:
-        results_exceed_thd: list[ComparedResult] = [
-            compared_result
-            for compared_result in compared_results
-            if compared_result.is_exceed_thd
+        exceed_header = "価格の急激な上昇が確認された商品"
+
+        def make_body(compared_result: ComparedResult) -> str:
+            return f"・{compared_result.product}。\n現在の取引価格は約{compared_result.current_price}円です。急激な価格の上昇が起きています。過去{user_config.period_days}日間の平均価格と比較して、{japanize_percentage(compared_result.increase_price_percentage)}しています。"
+
+        exceed_body = "\n\n".join([make_body(c) for c in compared_results])
+
+        return exceed_header + "\n" + exceed_body
+
+    def make_unexceed_txt(compared_results: list[ComparedResult]) -> str:
+        if len(compared_results) == 0:
+            return ""
+
+        unexceed_header = "価格の急激な上昇が確認されなかった商品"
+
+        def make_body(compared_result: ComparedResult) -> str:
+            return f"・{compared_result.product}。\n現在の取引価格は約{compared_result.current_price}円です。過去{user_config.period_days}日間の平均価格と比較して、{japanize_percentage(compared_result.increase_price_percentage)}しています。"
+
+        unexceed_body = "\n\n".join([make_body(c) for c in compared_results])
+        return unexceed_header + "\n" + unexceed_body
+
+    footer_txt = (
+        f"現在の閾値は{user_config.threshold_increase_rate_price}%です。閾値の変更は、以下のURLのReadmeをお読みください。"
+        + "\n"
+        + "https://github.com/Mkamono/box-over-looker"
+    )
+
+    return "\n\n".join(
+        [
+            s
+            for s in [
+                make_trading_timing_txt(now_hour),
+                make_exceed_txt([c for c in compared_results if c.is_exceed_thd]),
+                make_unexceed_txt([c for c in compared_results if not c.is_exceed_thd]),
+                footer_txt,
+            ]
+            if s != ""
         ]
-
-        results_not_exceed_thd: list[ComparedResult] = [
-            compared_result
-            for compared_result in compared_results
-            if not compared_result.is_exceed_thd
-        ]
-        # 閾値を3つとも超えているかどうかで、本文内のタイトルを変更する。
-        if len(results_exceed_thd) == 0:
-            title_exceed_thd: str = ""
-            title_not_exceed_thd: str = "価格の急激な上昇が確認されなかった商品"
-        if len(results_exceed_thd) == 3:
-            title_exceed_thd: str = "価格の急激な上昇が確認された商品"
-            title_not_exceed_thd: str = ""
-        else:
-            title_exceed_thd: str = "価格の急激な上昇が確認された商品"
-            title_not_exceed_thd: str = "価格の急激な上昇が確認されなかった商品"
-
-        body_core = f"""
-{title_exceed_thd}
-
-{"".join([make_body_by_product(result) for result in results_exceed_thd])}
-
-{title_not_exceed_thd}
-
-{"".join([make_body_by_product(result) for result in results_not_exceed_thd])}
-"""
-        return body_core
-
-    # 本文の冒頭部分
-    body_first: str = "本日の0時時点での取引価格によるお知らせです。\n"
-
-    body_core = make_body_core(compared_results)
-
-    body_last: str = f"""
-現在の閾値は{user_config.threshold_increase_rate_price}%です。閾値の変更は、以下のURLのReadmeをお読みください。
-
-“https://github.com/Mkamono/box-over-looker”
-"""
-    # URLはリポジトリ譲渡後に変更する。
-
-    return body_first + body_core + body_last
+    )
