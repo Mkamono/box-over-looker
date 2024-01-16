@@ -71,14 +71,12 @@ def make_compared_result_list() -> list[ComparedResult]:
 
 def make_mail_body(compared_results: list[ComparedResult]) -> str:
     user_config = get_user_config()
-    # 一番初めの文を作成。これに追加していく。
-    body: str = "本日の0時時点での取引価格によるお知らせです。\n"
 
     def make_body_by_product(compared_result: ComparedResult) -> str:
         if compared_result.is_exceed_thd:
             price_change_word: str = "上昇"
             word_exceed_thd: str = "急激な価格の上昇が起きています。"
-        if compared_result.increase_price_percentage > 0:
+        elif compared_result.increase_price_percentage > 0:
             price_change_word: str = "上昇"
             word_exceed_thd: str = ""
         else:
