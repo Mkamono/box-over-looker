@@ -79,7 +79,8 @@ def make_title(compared_results: list[ComparedResult]) -> str:
 
     # メールのタイトルを作成
     if product_exceed_thd:
-        mail_title: str = f"【お知らせ】{ ', '.join([product.name for product in product_exceed_thd])}で急激な価格の上昇がありました。"
+        return f"【お知らせ】{ ', '.join([product.name for product in product_exceed_thd])}で急激な価格の上昇がありました。"
+    return "【お知らせ】急激な価格の上昇はありませんでした。"
     else:
         mail_title: str = "【お知らせ】急激な価格の上昇はありませんでした。"
 
