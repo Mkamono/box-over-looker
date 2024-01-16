@@ -69,7 +69,7 @@ def make_compared_result_list() -> list[ComparedResult]:
     return compared_result_list
 
 
-def make_title(compared_results: list[ComparedResult]) -> str:
+def make_mail_title(compared_results: list[ComparedResult]) -> str:
     # 閾値を超えた商品のリストを作成
     product_exceed_thd: list[Product] = [
         compared_result.product
@@ -81,65 +81,3 @@ def make_title(compared_results: list[ComparedResult]) -> str:
     if product_exceed_thd:
         return f"【お知らせ】{ ', '.join([product.name for product in product_exceed_thd])}で急激な価格の上昇がありました。"
     return "【お知らせ】急激な価格の上昇はありませんでした。"
-    else:
-        mail_title: str = "【お知らせ】急激な価格の上昇はありませんでした。"
-
-    return mail_title
-
-
-def japanize_percentage(percentage: float) -> str:
-    suffix = "上昇" if percentage > 0 else "減少"
-    return f"{int(abs(percentage))}%" + suffix
-
-
-def make_mail_body(compared_results: list[ComparedResult]) -> str:
-    user_config = get_user_config()
-
-    now_hour = datetime.now().hour
-
-    def make_trading_timing_txt(hour: int):
-        return f"本日の{hour}時時点での取引価格によるお知らせです。"
-
-    def make_exceed_txt(compared_results: list[ComparedResult]) -> str:
-        if len(compared_results) == 0:
-            return ""
-
-        exceed_header = "価格の急激な上昇が確認された商品"
-
-        def make_body(compared_result: ComparedResult) -> str:
-            return f"・{compared_result.product}。\n現在の取引価格は約{int(compared_result.current_price)}円です。急激な価格の上昇が起きています。過去{user_config.period_days}日間の平均価格と比較して、{japanize_percentage(compared_result.increase_price_percentage)}しています。"
-
-        exceed_body = "\n\n".join([make_body(c) for c in compared_results])
-
-        return exceed_header + "\n" + exceed_body
-
-    def make_unexceed_txt(compared_results: list[ComparedResult]) -> str:
-        if len(compared_results) == 0:
-            return ""
-
-        unexceed_header = "価格の急激な上昇が確認されなかった商品"
-
-        def make_body(compared_result: ComparedResult) -> str:
-            return f"・{compared_result.product}。\n現在の取引価格は約{int(compared_result.current_price)}円です。過去{user_config.period_days}日間の平均価格と比較して、{japanize_percentage(compared_result.increase_price_percentage)}しています。"
-
-        unexceed_body = "\n\n".join([make_body(c) for c in compared_results])
-        return unexceed_header + "\n" + unexceed_body
-
-    footer_txt = (
-        f"現在の閾値は{user_config.threshold_increase_rate_price}%です。閾値の変更は、以下のURLのReadmeをお読みください。"
-        + "\n"
-        + "https://github.com/Mkamono/box-over-looker"
-    )
-
-    return "\n\n".join(
-        [
-            s
-            for s in [
-                make_trading_timing_txt(now_hour),
-                make_exceed_txt([c for c in compared_results if c.is_exceed_thd]),
-                make_unexceed_txt([c for c in compared_results if not c.is_exceed_thd]),
-                footer_txt,
-            ]
-            if s != ""
-        ]
-    )
