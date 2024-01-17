@@ -89,7 +89,7 @@ def make_mail_body(compared_results: list[ComparedResult]) -> str:
         exceed_header = "価格の急激な上昇が確認された商品"
 
         def make_body(compared_result: ComparedResult) -> str:
-            return f"・{compared_result.product}。\n現在の取引価格は約{compared_result.current_price}円です。急激な価格の上昇が起きています。過去{user_config.period_days}日間の平均価格と比較して、{japanize_percentage(compared_result.increase_price_percentage)}しています。"
+            return f"・{compared_result.product}。\n現在の取引価格は約{int(compared_result.current_price)}円です。急激な価格の上昇が起きています。過去{user_config.period_days}日間の平均価格と比較して、{japanize_percentage(compared_result.increase_price_percentage)}しています。"
 
         exceed_body = "\n\n".join([make_body(c) for c in compared_results])
 
@@ -102,7 +102,7 @@ def make_mail_body(compared_results: list[ComparedResult]) -> str:
         unexceed_header = "価格の急激な上昇が確認されなかった商品"
 
         def make_body(compared_result: ComparedResult) -> str:
-            return f"・{compared_result.product}。\n現在の取引価格は約{compared_result.current_price}円です。過去{user_config.period_days}日間の平均価格と比較して、{japanize_percentage(compared_result.increase_price_percentage)}しています。"
+            return f"・{compared_result.product}。\n現在の取引価格は約{int(compared_result.current_price)}円です。過去{user_config.period_days}日間の平均価格と比較して、{japanize_percentage(compared_result.increase_price_percentage)}しています。"
 
         unexceed_body = "\n\n".join([make_body(c) for c in compared_results])
         return unexceed_header + "\n" + unexceed_body
