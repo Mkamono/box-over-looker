@@ -21,7 +21,7 @@ class Mail(BaseModel):
         if mail_host is None:
             raise ValueError("MAIL_HOST environment variable is not set.")
         try:
-            requests.post(f"{mail_host}/send_mail", json=self.model_dump_json())
+            requests.post(f"{mail_host}/send_mail", json=self.model_dump())
         except Exception as e:
             print("Failed to send Email because of following error.")
             print(e)
