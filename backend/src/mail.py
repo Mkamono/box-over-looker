@@ -70,7 +70,7 @@ def make_compared_result_list() -> list[ComparedResult]:
 
 
 def make_mail_title(compared_results: list[ComparedResult]) -> str:
-    # 閾値を超えた商品のリストを作成
+    # ユーザー設定の閾値を超えた商品のリストを作成
     products_exceed_thd: list[Product] = [
         compared_result.product
         for compared_result in compared_results
@@ -78,6 +78,6 @@ def make_mail_title(compared_results: list[ComparedResult]) -> str:
     ]
 
     # メールのタイトルを作成
-    if products_exceed_thd:
-        return f"【お知らせ】{ ', '.join([product for product in products_exceed_thd])}で急激な価格の上昇がありました。"
+    if len(products_exceed_thd) > 0:
+        return f"【お知らせ】{ ', '.join(products_exceed_thd)}で急激な価格の上昇がありました。"
     return "【お知らせ】急激な価格の上昇はありませんでした。"
