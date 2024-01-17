@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from calc import calc_average_median_price, get_current_median_price
 from db import RangeDatetime
-from models import Product
+from models import Mail, Product
 from pydantic import BaseModel
 from user_config import UserConfig, get_user_config
 
@@ -138,4 +138,12 @@ def make_mail_body(compared_results: list[ComparedResult]) -> str:
             ]
             if s != ""
         ]
+    )
+
+
+def make_mail_class(compared_results: list[ComparedResult]) -> Mail:
+    return Mail(
+        title=make_mail_title(compared_results),
+        body=make_mail_body(compared_results),
+        user_address=get_user_config().mail,
     )
