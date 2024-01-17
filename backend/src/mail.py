@@ -71,7 +71,7 @@ def make_compared_result_list() -> list[ComparedResult]:
 
 def japanize_percentage(percentage: float) -> str:
     suffix = "上昇" if percentage > 0 else "減少"
-    return f"{abs(percentage):.1f}%" + suffix
+    return f"{int(abs(percentage))}%" + suffix
 
 
 def make_mail_body(compared_results: list[ComparedResult]) -> str:
