@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from calc import calc_average_median_price, get_current_median_price
 from db import RangeDatetime
-from models import Product
+from models import Mail, Product
 from pydantic import BaseModel
 from user_config import UserConfig, get_user_config
 
@@ -69,6 +69,20 @@ def make_compared_result_list() -> list[ComparedResult]:
     return compared_result_list
 
 
+def make_mail_title(compared_results: list[ComparedResult]) -> str:
+    products_exceed_thd: list[Product] = [
+        compared_result.product
+        for compared_result in compared_results
+        if compared_result.is_exceed_thd
+    ]
+
+    if len(products_exceed_thd) == 0:
+        return "【お知らせ】急激な価格の上昇はありませんでした。"
+    return (
+        f"【お知らせ】{ ', '.join(products_exceed_thd)}で急激な価格の上昇がありました。"
+    )
+
+
 def japanize_percentage(percentage: float) -> str:
     suffix = "上昇" if percentage > 0 else "減少"
     return f"{int(abs(percentage))}%" + suffix
@@ -124,4 +138,12 @@ def make_mail_body(compared_results: list[ComparedResult]) -> str:
             ]
             if s != ""
         ]
+    )
+
+
+def make_mail_class(compared_results: list[ComparedResult]) -> Mail:
+    return Mail(
+        title=make_mail_title(compared_results),
+        body=make_mail_body(compared_results),
+        user_address=get_user_config().mail,
     )
