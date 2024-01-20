@@ -1,6 +1,7 @@
 import re
 from pathlib import Path
 
+from error import NoAddressError
 from pydantic import BaseModel, Field
 
 
@@ -16,6 +17,10 @@ class UserConfig(BaseModel):
     threshold_increase_rate_price: float = Field(alias="価格の増加倍率(%)")
     notification_timing: NotificationTiming = Field(alias="通知時間")
     period_days: int = Field(alias="価格の過去データの日数")
+
+    def model_post_init(self):
+        if self.mail == "your_email_address@sample.com":
+            raise NoAddressError("メールアドレスを設定してください")
 
 
 def get_user_config() -> UserConfig:
