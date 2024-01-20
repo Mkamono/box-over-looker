@@ -18,7 +18,7 @@ class UserConfig(BaseModel):
     notification_timing: NotificationTiming = Field(alias="通知時間")
     period_days: int = Field(alias="価格の過去データの日数")
 
-    def model_post_init(self):
+    def model_post_init(self, __context) -> None:
         if self.mail == "your_email_address@sample.com":
             raise NoAddressError("メールアドレスを設定してください")
 
