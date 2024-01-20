@@ -8,5 +8,7 @@ RUN pip install -r /tmp/requirements.txt
 
 COPY user_config.jsonc ./
 COPY backend/src ./src
+RUN apt-get install -y tzdata && \
+    ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
 CMD ["python", "./src/main.py"]
