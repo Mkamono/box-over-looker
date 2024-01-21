@@ -6,6 +6,8 @@ services:
     ports:
       - ${SELENIUM_PORT}:4444 # selenium sever port
       - 7900:7900 # 実行中のChromeを確認するVNC用port
+    networks:
+      - container-network
   scraping:
     build:
       context: ./scraping
@@ -15,6 +17,8 @@ services:
       - ${SCRAPING_PORT}:8000
     env_file:
       - .env
+    networks:
+      - container-network
   backend:
     build:
       context: ./
@@ -26,6 +30,8 @@ services:
       - .env
     depends_on:
       - db
+    networks:
+      - container-network
   db:
     image: postgres:16
     tty: true
@@ -35,5 +41,13 @@ services:
       - postgres_volume_main:/var/lib/postgresql/data
     env_file:
       - .env
+    networks:
+      - container-network
+
+networks:
+  container-network:
+    name: container-network
+    driver: bridge
+
 volumes:
   postgres_volume_main:
