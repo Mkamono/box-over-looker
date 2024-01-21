@@ -9,4 +9,6 @@ RUN pip install -r /tmp/requirements.txt
 COPY user_config.jsonc ./
 COPY backend/src ./src
 
+ENV TZ="Asia/Tokyo"
+
 CMD ["python", "./src/main.py"]
