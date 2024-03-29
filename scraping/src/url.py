@@ -61,16 +61,3 @@ class URL:
         return f"https://kakaku.com/search_results/{quote(' '.join(self.keywords), encoding='shift-jis')}/?minp={self.price_min}&maxp={self.price_max}&mall=2&page={page}"
 
     # ヤフーショッピング条件　並び順：標準（デフォルト）　モールの指定：クエリでmall=2にするとヤフーショッピングのみの検索になる
-
-    def sunidan(self) -> str:
-        if self.product == Product.黒炎の支配者:
-            return "https://snkrdunk.com/apparels/127743/sizes/367821?slide=right"
-
-        elif self.product == Product.ポケモンカード151:
-            return "https://snkrdunk.com/apparels/118914/sizes/341546?slide=right"
-
-        elif self.product == Product.レイジングサーフ:
-            return "https://snkrdunk.com/apparels/134104/sizes/384090?slide=right"
-
-        else:
-            raise ValueError("商品名が不正です")

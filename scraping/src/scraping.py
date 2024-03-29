@@ -5,7 +5,6 @@ from domain.mercari import get_items as get_items_mercari
 from domain.paypay import get_items as get_items_paypay
 from domain.rakuma import get_items as get_items_rakuma
 from domain.rakuten import get_items as get_items_rakuten
-from domain.sunidan import get_items as get_items_sunidan
 from domain.yahoo import get_items as get_items_yahoo
 from domain.yshop import get_items as get_items_yshop
 from errors import ItemNotFoundError
@@ -47,8 +46,6 @@ def scraping_all_site(product: Product) -> list[Item]:
     print("rakuma取得完了")
     Item_list += get_items_all_pages(get_items_rakuten, url.rakuten)
     print("rakuten取得完了")
-    Item_list += get_items_sunidan(driver, url.sunidan(), product)
-    print("sunidan取得完了")
     Item_list += get_items_all_pages(get_items_yahoo, url.yahoo)
     print("yahoo取得完了")
     Item_list += get_items_all_pages(get_items_yshop, url.yshop)
