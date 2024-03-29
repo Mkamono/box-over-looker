@@ -46,7 +46,7 @@ services:
 
 networks:
   container-network:
-    name: container-network
+    name: boxoverlooker
     driver: bridge
 
 volumes:
