@@ -28,25 +28,6 @@ def get_ScrapingResults() -> ScrapingResults:
     return ScrapingResults(scraping_results=scraping_results)
 
 
-# 開発用モックエンドポイント
-@app.get("/scraping_mock")
-def get_ScrapingResults_mock() -> ScrapingResults:
-    return ScrapingResults(
-        scraping_results=[
-            ScrapingResult(
-                date=datetime.datetime.now(),
-                item=Item(title="mock_1", price=5000, site=Site.メルカリ),
-                product=Product.ポケモンカード151,
-            ),
-            ScrapingResult(
-                date=datetime.datetime.now(),
-                item=Item(title="mock_2", price=6000, site=Site.ヤフオク),
-                product=Product.黒炎の支配者,
-            ),
-        ]
-    )
-
-
 def run_server() -> None:
     uvicorn.run(app, port=int(os.environ["SCRAPING_PORT"]), host="0.0.0.0")
 
